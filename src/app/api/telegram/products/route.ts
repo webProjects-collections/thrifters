@@ -9,11 +9,10 @@ export async function POST(req: Request) {
   const { query, page } = (await req.json()) as ProductsRequest;
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const products = await api.products.getProductsByName({
       query,
       page,
-      isImageUrl: false,
+      isImageUrl: true,
     });
     return Response.json(products);
   } catch (e) {

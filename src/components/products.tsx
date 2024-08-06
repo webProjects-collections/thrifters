@@ -13,8 +13,11 @@ export default async function ProductsDisplay({
   query,
   page,
 }: ProductsDisplayProps) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const products = await api.products.getProductsByName({ query, page });
+  const products = await api.products.getProductsByName({
+    query,
+    page,
+    isImageUrl: false,
+  });
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -29,7 +32,7 @@ export default async function ProductsDisplay({
               return (
                 <div
                   key={product.id}
-                  className="bg-background overflow-hidden rounded-lg shadow-md"
+                  className="overflow-hidden rounded-lg bg-background shadow-md"
                 >
                   <ProductImage src={product.imgurl} name={product.name} />
                   <div className="p-4">

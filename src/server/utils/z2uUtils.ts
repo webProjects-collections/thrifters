@@ -1,7 +1,11 @@
 import { type Z2UQuerySearchResponse } from "~/types";
 
 // Parameters should be validated by zod in the route.ts
-export async function getProducts(page: number, query: string) {
+export async function getProducts(
+  page: number,
+  query: string,
+  isImageUrls: boolean,
+) {
   const url = `https://www.z2u.com/searchProductList?page=${page}&keyword=${query}&service_id=&platform_id=&rangeFrom=&rangeTo=&sort=recomm`;
 
   const headers = {
@@ -15,12 +19,14 @@ export async function getProducts(page: number, query: string) {
   const response = await fetch(url, { headers });
   if (response.ok) {
     const json = (await response.json()) as Z2UQuerySearchResponse;
-    await Promise.all(
-      json.data.html.data.map(async (product) => {
-        const imageUrl = await fetchImageWithHeaders(product.imgurl);
-        product.imgurl = imageUrl;
-      }),
-    );
+    if (isImageUrls === false) {
+      await Promise.all(
+        json.data.html.data.map(async (product) => {
+          const imageUrl = await fetchImageWithHeaders(product.imgurl);
+          product.imgurl = imageUrl;
+        }),
+      );
+    }
 
     return json;
   } else {
